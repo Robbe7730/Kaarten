@@ -1,0 +1,14 @@
+{% from "partials.html" import render_card, deck %}
+<html>
+    <body>
+        <h1>{{game.game_id | e}}</h1>
+        <h2>Players:</h2>
+        <ul>
+            {% for playerid in game.players %}
+                <li>{{ playerid }}: {{ game.cards[playerid] | length}} cards</li>
+            {% endfor %}
+        </ul>
+        <h2>Deck:</h2>
+        {{ deck(game, "") }}
+    </body>
+</html>

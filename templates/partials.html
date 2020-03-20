@@ -1,0 +1,26 @@
+{% macro render_card(card, game, playerid, play=False, undo=False, pickup=False, shuffle_deck=False) -%}
+    {% if play %}
+        <a href={{ url_for("play", card=card, gameid=game.game_id, playerid=playerid) }}>{{_render_card(card)}} </a>
+    {% elif undo %}
+        <a href={{ url_for("undo", gameid=game.game_id, playerid=playerid) }}>{{_render_card(card)}} </a>
+    {% elif pickup %}
+        <a href={{ url_for("pickup", gameid=game.game_id, playerid=playerid) }}>{{_render_card(card)}} </a>
+    {% elif shuffle_deck %}
+        <a href={{ url_for("shuffle_deck", gameid=game.game_id, playerid=playerid) }}>{{_render_card(card)}} </a>
+    {% else %}
+        {{_render_card(card)}}
+    {% endif %}
+{%- endmacro %}
+
+{% macro _render_card(card) -%}
+    <img src={{ url_for('static', filename='images/cards/' + card + '.png') }} alt={{ card }} width=100/>
+{%- endmacro %}
+
+{% macro deck(game, playerid="") -%}
+    {% if game.cards["pickup_pile"] == [] %}
+        {{ render_card("XX", game, playerid, shuffle_deck=(playerid != "")) }}
+    {% else %}
+        {{ render_card("back", game, playerid, pickup=(playerid != "")) }}
+    {% endif %}
+    {{ render_card(game.last_card, game, playerid, undo=(playerid != "" and game.cards["played_cards"] != [])) }}
+{%- endmacro %}

@@ -1,0 +1,18 @@
+{% from "partials.html" import render_card, deck %}
+<html>
+    <body>
+        <h1>{{playerid | e}}</h1>
+        <h2> Cards: </h2>
+            {% for card in game.cards_for(playerid) %}
+                {{ render_card(card, game, playerid, play=True) }}
+            {% endfor %}
+        <h2>Deck:</h2>
+        {{ deck(game, playerid) }}
+        <h2>Other players:</h2>
+        {% for other_playerid in game.players %}
+            {% if other_playerid != playerid %}
+                <li>{{ other_playerid }}: {{ game.cards[other_playerid] | length}} cards <a href={{ url_for("give", gameid=game.game_id, playerid=playerid, victim=other_playerid)}}>Give card</a></li>
+            {% endif %}
+        {% endfor %}
+    </body>
+</html>
